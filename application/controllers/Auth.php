@@ -24,6 +24,9 @@ class Auth extends CI_Controller {
 		$this->load->library('form_validation');
 	}
 	public function index(){
+		if($this->session->userdata('email')){
+			redirect('user');
+		}
 		$this->form_validation->set_rules('email', 'Email', 'required|trim|valid_email');
 		$this->form_validation->set_rules('password', 'Password', 'required|trim');
 
@@ -81,6 +84,9 @@ class Auth extends CI_Controller {
 	}
 
 	public function registration(){
+		if($this->session->userdata('email')){
+			redirect('user');
+		}
 		$this->form_validation->set_rules('name', 'Name', 'required|trim');
 		$this->form_validation->set_rules('email', 'Email', 'required|trim|valid_email|is_unique[user.email]',[
 											'is_unique' => 'Is Already Registered'		
@@ -126,6 +132,18 @@ class Auth extends CI_Controller {
 											You have been LogOut
 										</div>');
 		redirect('auth');
+	}
+
+	public function block(){
+		$data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+        $data['title'] = 'Access Block';
+		$data['sub_menu'] = '';
+
+		$this->load->view('admin/templates/header', $data);
+		$this->load->view('admin/templates/sidebar', $data);
+		$this->load->view('admin/templates/topbar', $data);
+		$this->load->view('admin/auth/blocked', $data);
+		$this->load->view('admin/templates/footer');
 	}
 
 

@@ -19,7 +19,8 @@ class Akses extends CI_Controller {
 	 * @see https://codeigniter.com/user_guide/general/urls.html
 	 */
 	public function __construct(){
-		parent::__construct();
+        parent::__construct();
+        is_logged_in(); // Helper
 		$this->load->library('form_validation');
 		$this->load->model('admin/akses_model', 'akses');
     }
