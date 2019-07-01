@@ -128,6 +128,51 @@ class Admin extends CI_Controller {
 			redirect('admin/aksesUserRole');
 		}
 	}
+
+	// User Management
+	public function userManagement(){
+		$data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+        $data['title'] = 'Setting Akses';
+        $data['sub_menu'] = 'User Management';
+        
+        // Config Database
+        $data['data_user'] = $this->akses->getUser();
+        
+
+        //$this->form_validation->set_rules('role_id', 'Role', 'required');
+        //$this->form_validation->set_rules('menu_id', 'Menu Header', 'required');
+
+        if($this->form_validation->run()==FALSE){
+            $this->load->view('admin/templates/header', $data);
+            $this->load->view('admin/templates/sidebar', $data);
+            $this->load->view('admin/templates/topbar', $data);
+            $this->load->view('admin/akses/usermanagement', $data);
+            $this->load->view('admin/templates/footer');
+        }else{
+            $post = $this->input->post();
+            $this->db->insert('user_access_menu', $post);
+            $this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">
+                                            Conratulation!, Your Add Role Akses Menu
+                                        </div>');
+            redirect('admin/userManagement');
+        }
+	}
+
+	public function userManagementDelete($id){
+        //echo $id;
+		if($id){
+			$this->db->delete('user', array('id' => $id));
+			$this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">
+											Conratulation!, Delete User
+										</div>');
+			redirect('admin/userManagement');
+		}else{
+			$this->session->set_flashdata('message', '<div class="alert alert-danger" role="alert">
+											Warning! Data Not Found
+										</div>');
+			redirect('admin/userManagement');
+		}
+	}
 	
 	
 }

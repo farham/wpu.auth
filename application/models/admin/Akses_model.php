@@ -31,4 +31,14 @@ class Akses_model extends CI_Model {
 
         return $query->result_array();
     }
+
+    public function getUser(){
+        $this->db->select('a.*, b.role as nama_role');
+        $this->db->from('user a');
+        $this->db->join('user_role b','a.role_id=b.id', 'left');
+        $this->db->order_by('created_date', 'DESC');
+        $query = $this->db->get();
+
+        return $query->result_array();
+    }
 }
